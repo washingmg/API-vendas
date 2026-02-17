@@ -33,7 +33,7 @@ export const deletarVenda = async (req, res, next) => {
   try {
     await vendaService.deletarVenda(req.params.id);
 
-    return res.status(204).send();
+    return successResponse(res, 204, vendaService);
   } catch (error) {
     next(error);
   }
