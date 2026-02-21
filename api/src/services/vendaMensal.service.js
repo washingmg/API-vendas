@@ -1,43 +1,23 @@
-import VendaMensal from '../models/vendaMensal.model.js';
+import * as repo from '../repository/vendaMensal.repository.js';
 import { AppError } from '../utils/AppError.js';
 
-export const criarVenda = async (data) => {
-  return await VendaMensal.create(data);
-};
+export const criarVenda = (data, userId) => repo.create(data, userId);
 
-export const listarVendas = async () => {
-  return await VendaMensal.find().sort({ ano: -1, mes: -1 });
-};
+export const listarVendas = (userId) => repo.findAll(userId);
 
-export const buscarVendaPorId = async (id) => {
-  const venda = await VendaMensal.findById(id);
-
-  if (!venda) {
-    throw new AppError('Venda não encontrada', 404);
-  }
-
+export const buscarVenda = async (id, userId) => {
+  const venda = await repo.findById(id, userId);
+  if (!venda) throw new AppError('Venda não encontrada', 404);
   return venda;
 };
 
-export const atualizarVenda = async (id, data) => {
-  const vendaAtualizada = await VendaMensal.findByIdAndUpdate(id, data, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!vendaAtualizada) {
-    throw new AppError('Venda não encontrada', 404);
-  }
-
-  return vendaAtualizada;
+export const atualizarVenda = async (id, data, userId) => {
+  const venda = await repo.update(id, data, userId);
+  if (!venda) throw new AppError('Venda não encontrada', 404);
+  return venda;
 };
 
-export const deletarVenda = async (id) => {
-  const venda = await VendaMensal.findByIdAndDelete(id);
-
-  if (!venda) {
-    throw new AppError('Venda não encontrada', 404);
-  }
-
-  return venda;
+export const deletarVenda = async (id, userId) => {
+  const venda = await repo.remove(id, userId);
+  if (!venda) throw new AppError('Venda não encontrada', 404);
 };

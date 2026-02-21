@@ -4,8 +4,10 @@ import {
   validateVenda,
   validateVendaUpdate,
 } from '../middlewares/validateVenda.middleware.js';
+import auth from '../middlewares/auth.middleware.js';
 
 const router = Router();
+router.use(auth);
 
 router.post('/', validateVenda, vendaController.criarVenda);
 router.get('/', vendaController.listarVendas);

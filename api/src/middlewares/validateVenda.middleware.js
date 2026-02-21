@@ -1,47 +1,41 @@
+import mongoose from 'mongoose';
 import { AppError } from '../utils/AppError.js';
 
 export const validateVenda = (req, res, next) => {
-  const { mes, ano, valorVendido } = req.body;
+  const { valor, descricao, dataVenda } = req.body;
 
-  if (mes === undefined || ano === undefined || valorVendido === undefined) {
-    return next(
-      new AppError('Campos obrigatórios: mes, ano, valorVendido', 400)
-    );
+  // usuário vem do token, não do body
+  if (valor === undefined || !dataVenda) {
+    return next(new AppError('Campos obrigatórios: valor e dataVenda', 400));
   }
 
-  if (!Number.isInteger(mes) || mes < 1 || mes > 12) {
-    return next(new AppError('Mês inválido', 400));
+  // valor
+  if (typeof valor !== 'number' || valor < 0) {
+    return next(new AppError('O valor deve ser um número positivo', 400));
   }
 
-  if (!Number.isInteger(ano) || ano < 1900) {
-    return next(new AppError('Ano inválido', 400));
-  }
-
-  if (typeof valorVendido !== 'number' || valorVendido < 0) {
-    return next(new AppError('Valor inválido', 400));
+  // data
+  const date = new Date(dataVenda);
+  if (isNaN(date.getTime())) {
+    return next(new AppError('Data de venda inválida', 400));
   }
 
   next();
 };
 
 export const validateVendaUpdate = (req, res, next) => {
-  const { mes, ano, valorVendido } = req.body;
+  const { valor, descricao, dataVenda } = req.body;
 
-  if (mes !== undefined) {
-    if (!Number.isInteger(mes) || mes < 1 || mes > 12) {
-      return next(new AppError('Mês inválido', 400));
+  if (valor !== undefined) {
+    if (typeof valor !== 'number' || valor < 0) {
+      return next(new AppError('O valor deve ser um número positivo', 400));
     }
   }
 
-  if (ano !== undefined) {
-    if (!Number.isInteger(ano) || ano < 1900) {
-      return next(new AppError('Ano inválido', 400));
-    }
-  }
-
-  if (valorVendido !== undefined) {
-    if (typeof valorVendido !== 'number' || valorVendido < 0) {
-      return next(new AppError('Valor inválido', 400));
+  if (dataVenda !== undefined) {
+    const date = new Date(dataVenda);
+    if (isNaN(date.getTime())) {
+      return next(new AppError('Data de venda inválida', 400));
     }
   }
 

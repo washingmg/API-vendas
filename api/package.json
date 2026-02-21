@@ -15,16 +15,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
-    "mongoose": "^9.1.6",
-    "cors": "^2.8.5",
-    "helmet": "^6.0.0"
+    "helmet": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.6"
   },
   "devDependencies": {
     "eslint": "^8.47.0",
-    "prettier": "^3.8.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.5.5"
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.0"
   }
 }

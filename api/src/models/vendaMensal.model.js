@@ -1,29 +1,48 @@
 import mongoose from 'mongoose';
 
-const vendaMensalSchema = new mongoose.Schema(
+const schema = new mongoose.Schema(
   {
-    mes: {
-      type: Number,
-      required: [true, 'O mês é obrigatório'],
-      min: [1, 'O mês deve ser entre 1 e 12'],
-      max: [12, 'O mês deve ser entre 1 e 12'],
-      unique: true,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true,
     },
-    ano: {
+
+    valor: {
       type: Number,
-      required: [true, 'O ano é obrigatório'],
-      min: [1900, 'Ano inválido'],
+      required: [true, 'Valor obrigatório'],
+      min: [0, 'Valor inválido'],
     },
-    valorVendido: {
+
+    descricao: String,
+
+    dataVenda: {
+      type: Date,
+      required: [true, 'Data obrigatória'],
+      index: true,
+    },
+
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+
+    version: {
       type: Number,
-      required: [true, 'O valor vendido é obrigatório'],
-      min: [0, 'O valor não pode ser negativo'],
+      default: 0,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-vendaMensalSchema.index({ mes: 1, ano: 1 }, { unique: true });
-export default mongoose.model('VendaMensal', vendaMensalSchema);
+schema.pre('findOneAndUpdate', function () {
+  this.set({ $inc: { version: 1 } });
+});
+
+export default mongoose.model('Venda', schema);
